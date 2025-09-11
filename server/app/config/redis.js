@@ -2,54 +2,23 @@ const Redis = require("ioredis");
 const env = require("dotenv");
 env.config({ path: ".env" });
 
-const redis = new Redis(process.env.REDIS_URL, {
-  tls: {
-    rejectUnauthorized: false,
-  },
-  // Connection timeout settings
-  connectTimeout: 60000, // 60 seconds
-  commandTimeout: 5000, // 5 seconds
-  lazyConnect: true, // Connect only when needed
-  keepAlive: 30000, // Keep connection alive for 30 seconds
-
-  // Retry configuration
-  retryDelayOnFailover: 100, // Initial retry delay
-  maxRetriesPerRequest: 3, // Maximum retries per request
-  retryDelayOnClusterDown: 1000, // Delay when cluster is down
-  enableOfflineQueue: true, // Queue commands when offline
-
-  // Reconnection settings
-  reconnectOnError: (err) => {
-    console.log("Redis reconnect on error:", err.message);
-    return err.message.includes("ETIMEDOUT") || err.message.includes("ECONNREFUSED");
-  },
-  maxRetriesPerRequest: null, // Unlimited retries for connection
-
-  // Logging and debugging
-  showFriendlyErrorStack: true,
+const redis = new Redis({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  username: process.env.REDIS_USERNAME,
+  password: process.env.REDIS_PASSWORD,
 });
 
-redis.on("error", (err) => {
-  console.error("Redis connection error:", err.message);
-  if (err.code === "ETIMEDOUT") {
-    console.error("Redis connection timed out. Check network connectivity and Redis server status.");
-  }
-});
+redis.on("error", (error) => console.error(error));
 
-redis.on("connect", () => {
-  console.log("Successfully connected to Redis");
-});
+redis.on("connect", () => console.log("Redis connected"));
 
-redis.on("ready", () => {
-  console.log("Redis client ready to receive commands");
-});
+redis.on("disconnect", () => console.log("Redis disconnected"));
 
-redis.on("close", () => {
-  console.log("Redis connection closed");
-});
+redis.on("reconnecting", () => console.log("Redis reconnecting"));
 
-redis.on("reconnecting", (delay) => {
-  console.log(`Redis reconnecting in ${delay}ms`);
-});
+redis.on("end", () => console.log("Redis connection closed"));
+
+redis.on("close", () => console.log("Redis connection closed"));
 
 module.exports = redis;
