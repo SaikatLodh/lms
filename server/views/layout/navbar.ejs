@@ -1,0 +1,228 @@
+<% notifications = notifications || []; %>
+<% user = user || {}; %>
+<nav
+            class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow"
+          >
+             
+            <!-- Sidebar Toggle (Topbar) -->
+            <button
+              id="sidebarToggleTop"
+              class="btn btn-link d-md-none rounded-circle mr-3"
+            >
+              <i class="fa fa-bars"></i>
+            </button>
+
+            
+            </form>
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+              <!-- Nav Item - Alerts -->
+              <li class="nav-item dropdown no-arrow mx-1">
+                <div
+                  class="nav-link dropdown-toggle"
+                id="alertsDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-bell fa-fw"></i>
+                  <!-- Counter - Alerts -->
+                  <% const unseenCount = notifications.filter(n => !n.seen).length; %>
+                  <% if (unseenCount > 0) { %>
+                    <span class="badge badge-danger badge-counter"><%= unseenCount > 99 ? '99+' : unseenCount %></span>
+                  <% } %>
+              </div>
+                <!-- Dropdown - Alerts -->
+                <div
+                  class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in notification-dropdown"
+                  aria-labelledby="alertsDropdown"
+                >
+                  <h6 class="dropdown-header">Notifications Center</h6>
+                  <% if(notifications && notifications.length > 0){%>
+                    <% notifications.forEach(notification => { %>
+                      <div class="dropdown-item d-flex align-items-center" >
+                        <div class="mr-3">
+                          <% const imgSrc = notification.senderId && (notification.senderId.profilePicture?.url || notification.senderId.googleavatar || notification.senderId.facebookavatar); %>
+                          <% if(imgSrc){ %>
+                            <img src="<%= imgSrc %>" class="img-profile rounded-circle" style="width: 40px; height: 40px;" alt="Sender Image">
+                          <% } else { %>
+                            <div class="icon-circle bg-primary">
+                              <i class="fas fa-bell text-white"></i>
+                            </div>
+                          <% } %>
+                        </div>
+                        <div>
+                          <div class="small text-gray-500"><%= new Date(notification.createdAt).toLocaleDateString() %></div>
+                          <span class="font-weight-bold"><%= (notification.senderId ? notification.senderId.fullName + ': ' : '') %><%= notification.message || 'New notification' %></span>
+                        </div>
+                      </div>
+                    <% }); %>
+                  <% } else { %>
+                    <div class="dropdown-item d-flex align-items-center" >
+                      <div class="mr-3">
+                        <div class="icon-circle bg-secondary">
+                          <i class="fas fa-info text-white"></i>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="small text-gray-500">No new notifications</div>
+                        <span class="font-weight-bold">You're all caught up!</span>
+                      </div>
+                    </div>
+                  <% } %>
+                </div>
+              </li>
+
+              <!-- Nav Item - User Information -->
+              <li class="nav-item dropdown no-arrow">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="userDropdown"
+                  role="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <span class="mr-2 d-none d-lg-inline text-gray-600 small"
+                    ><%= user.fullName || 'User' %></span
+                  >
+                  <img
+                    class="img-profile rounded-circle"
+                    src="<%=  user.profilePicture.url || 'img/undraw_profile.svg' %>"
+                  />
+                </a>
+                <!-- Dropdown - User Information -->
+                <div
+                  class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                  aria-labelledby="userDropdown"
+                >
+                  <a class="dropdown-item" href="/updateprofile">
+                    
+                    <i class="fa-solid fa-pen-to-square fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Update  Profile
+                  </a>
+                  <a class="dropdown-item" href="#">
+                   
+                    <i class="fa-solid fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                   Change Password
+                  </a>
+                 
+                  <div class="dropdown-divider"></div>
+                  <form action="/admin/logout" method="GET" class="dropdown-item">
+                    
+                  </a>
+                  <button type="submit" class="btn btn-link p-0 text-left">
+                      <i
+                      class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
+                    ></i>
+            Log Out
+          </button>
+                  </form>
+                 
+                </div>
+              </li>
+            </ul>
+          </nav>
+          <script>
+            var notificationsData = <%- JSON.stringify(notifications) %>;
+
+            const notificationAudio = new Audio('/audio/mixkit-bell-notification-933.wav');
+
+            let unseenCount = notificationsData.filter(notification => !notification.seen).length;
+
+            function updateBadge() {
+              const alertsDropdown = document.getElementById('alertsDropdown');
+              let badge = alertsDropdown.querySelector('.badge-counter');
+              if (unseenCount > 0) {
+                if (!badge) {
+                  badge = document.createElement('span');
+                  badge.className = 'badge badge-danger badge-counter';
+                  alertsDropdown.appendChild(badge);
+                }
+                badge.textContent = unseenCount > 99 ? '99+' : unseenCount;
+              } else {
+                if (badge) {
+                  badge.remove();
+                }
+              }
+            }
+
+            async function markUnseenNotificationsAsSeen() {
+              const unseenIds = notificationsData.filter(notification => !notification.seen).map(notification => notification._id);
+              if (unseenIds.length > 0) {
+                await Promise.all(unseenIds.map(id =>
+                  fetch('/admin/seennotification/' + id, {
+                    method: 'GET',
+                    credentials: 'same-origin'
+                  }).then(response => {
+                    if (!response.ok) {
+                      console.error('Failed to mark notification as seen:', id);
+                    }
+                  }).catch(error => {
+                    console.error('Error marking notification as seen:', error);
+                  })
+                ));
+                unseenCount = 0;
+                updateBadge();
+              }
+            }
+
+            // Call the function on page load
+            document.addEventListener('DOMContentLoaded', function() {
+              updateBadge();
+              markUnseenNotificationsAsSeen();
+            });
+
+            if (typeof socket !== 'undefined') {
+              socket.on("notification", (msg) => {
+                // Play notification sound
+                notificationAudio.play().catch(error => {
+                  console.error('Error playing notification sound:', error);
+                });
+
+                unseenCount += 1;
+                updateBadge();
+
+                const dropdownList = document.querySelector('.notification-dropdown');
+                if (dropdownList) {
+                  const noNotificationItem = dropdownList.querySelector('.dropdown-item');
+                  if (noNotificationItem && noNotificationItem.textContent.includes("No new notifications")) {
+                    noNotificationItem.remove();
+                  }
+
+                  const newItem = document.createElement('div');
+                  newItem.className = 'dropdown-item d-flex align-items-center';
+                  const imgSrc = msg.senderId && (msg.senderId.profilePicture?.url || msg.senderId.googleavatar || msg.senderId.facebookavatar);
+                  const imageHtml = imgSrc ? `<img src="${imgSrc}" class="img-profile rounded-circle" style="width: 40px; height: 40px;" alt="Sender Image">` : `
+                      <div class="icon-circle bg-primary">
+                        <i class="fas fa-bell text-white"></i>
+                      </div>
+                    `;
+                  newItem.innerHTML = `
+                    <div class="mr-3">
+                      ${imageHtml}
+                    </div>
+                    <div>
+                      <div class="small text-gray-500">${new Date(msg.createdAt || Date.now()).toLocaleDateString()}</div>
+                      <span class="font-weight-bold">${(msg.senderId ? msg.senderId.fullName + ': ' : '')}${msg.message || 'New notification'}</span>
+                    </div>
+                  `;
+
+
+                  const header = dropdownList.querySelector('.dropdown-header');
+                  if (header) {
+                    header.insertAdjacentElement('afterend', newItem);
+                  }
+                }
+              });
+            } else {
+              console.error("Socket is not defined. Make sure socket.io is loaded and socket is initialized.");
+            }
+          </script>
+
+         
+
+

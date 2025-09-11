@@ -1,0 +1,137 @@
+<ul
+  class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+  id="accordionSidebar"
+>
+  <!-- Sidebar - Brand -->
+
+  <a
+    class="sidebar-brand d-flex align-items-center justify-content-center"
+    href="/"
+  >
+    <img
+      src="https://assets.aceternity.com/logo-dark.png"
+      alt=""
+      style="width: 30px; height: 30px; object-fit: cover"
+    />
+    <div class="sidebar-brand-text mx-3">LMS ACADEMY</div>
+  </a>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider my-0" />
+
+  <!-- Nav Item - Dashboard -->
+  <li class="nav-item">
+    <a class="nav-link" href="/">
+      <i class="fas fa-fw fa-tachometer-alt"></i>
+      <span>Dashboard</span></a
+    >
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <li class="nav-item">
+    <a class="nav-link" href="/createlecture">
+      <i class="fa-brands fa-creative-commons-by"></i>
+      <span>Create Lecturer</span></a
+    >
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <li class="nav-item">
+    <a class="nav-link" href="/managecourses">
+      <i class="fa-solid fa-award"></i>
+      <span>Manage Courses</span></a
+    >
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <li class="nav-item">
+    <a class="nav-link" href="/users">
+      <i class="fa-solid fa-users"></i>
+      <span>Users</span></a
+    >
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <li class="nav-item">
+    <a class="nav-link" href="/courses">
+      <i class="fa-solid fa-award"></i>
+      <span>Courses</span></a
+    >
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <li class="nav-item">
+    <a class="nav-link" href="/orders">
+      <i class="fa-solid fa-truck fa-2x"></i>
+      <span>Orders</span></a
+    >
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <li class="nav-item">
+    <a class="nav-link" href="/contactsupport">
+      <i class="fa-solid fa-headset"></i>
+      <span>Support</span></a
+    >
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider" />
+
+  <!-- Heading -->
+
+  <!-- Nav Item - Pages Collapse Menu -->
+  <li class="nav-item">
+    <a
+      class="nav-link collapsed"
+      href="#"
+      data-toggle="collapse"
+      data-target="#collapsePages"
+      aria-expanded="true"
+      aria-controls="collapsePages"
+    >
+      <i class="fas fa-fw fa-folder"></i>
+      <span>Account</span>
+    </a>
+    <div
+      id="collapsePages"
+      class="collapse"
+      aria-labelledby="headingPages"
+      data-parent="#accordionSidebar"
+    >
+      <div class="bg-white py-2 collapse-inner rounded">
+        <a href="/updateprofile" class="collapse-item">Update Profile</a>
+        <a href="/changepassword" class="collapse-item">Change Password</a>
+        <form
+          action="/admin/logout"
+          method="GET"
+          class="collapse-item cursor-pointer log-out"
+        >
+          <button type="submit" class="btn btn-link p-0 text-left">
+            Log Out
+          </button>
+        </form>
+      </div>
+    </div>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block" />
+
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+</ul>

@@ -1,0 +1,106 @@
+const endpoints = {
+  auth: {
+    sendotp: "/auth/sendotp",
+    verifyotp: "/auth/verifyotp",
+    register: "/auth/register",
+    login: "/auth/login",
+    logout: "/auth/logout",
+    forgotPasswordSendMail: "/auth/forgotsendemail",
+    forgotResetPassword: "/auth/forgotresetpassword",
+    googlesignup: "/auth/googlesignup",
+    googlesignin: "/auth/googlesignin",
+    refreshtoken: "/auth/refreshtoken",
+    facebooksignup: "/auth/facebooksignup",
+    facebooksignin: "/auth/facebooksignin",
+  },
+  user: {
+    getuser: "/user/getuser",
+    myCourses: "/user/mycourses",
+    updateUser: "/user/updateuser",
+    changePassword: "/user/changepassword",
+    deleteAccount: "/user/deleteaccount",
+  },
+  course: {
+    getcoursebyuser: "/course/getcoursebyuser",
+    getsinglecoursebyuser: "/course/getsinglecoursebyuser",
+    getCourseByInstructor: "/course/getcoursebyinstructor",
+    getSingleCourseByInstructor: "/course/getsinglecoursebyinstructor",
+    createCourse: "/course/createcourse",
+    updateCourse: "/course/updateCourse",
+    deleteCourse: "/course/deletecourse",
+    publishCourse: "/course/publishcourse",
+    suggestedCourses: "/course/suggestedcourses",
+  },
+  lecture: {
+    createLectureWithBulk: "/lecture/createlecturewithbulk",
+    createLecture: "/lecture/createlecture",
+    getLectureByLecturer: "/lecture/getlecturebylecturer",
+    getSingleLecture: "/lecture/getLectureById",
+    updateLecture: "/lecture/updatelecture",
+    deleteLecture: "/lecture/deletelecture",
+    toggleFreePreview: "/lecture/togglefreepreview",
+  },
+  announcement: {
+    createAnnouncement: "/announcement/createannouncement",
+    getAnnouncementByCourse: "/announcement/getannouncementbycourse",
+    getSingleAnnouncement: "/announcement/getsingleannouncement",
+    updateAnnouncement: "/announcement/updateannouncement",
+    deleteAnnouncement: "/announcement/deleteannouncement",
+  },
+  progress: {
+    getLectureProgress: "/courseprogress/getlectureprogress",
+    getSingleLectureProgress: "/courseprogress/getsinglelectureprogress",
+    markCurrentLectureAsViewed: "/courseprogress/markcurrentLectureasviewed",
+    getCurrentCourseProgress: "/courseprogress/getCurrentCourseProgress",
+    resetCurrentCourseProgress: "/courseprogress/resetcurrentcourseprogress",
+  },
+  cart: {
+    addtoCartAndRemoveCart: "/addtocart/addtocartandremovecart",
+    getCart: "/addtocart/getcart",
+  },
+  wishlist: {
+    addtoWishlistAndRemoveWishlist: "/wishlist/addtowishListandremovecart",
+    getWishlist: "/wishlist/getwishlist",
+  },
+  review: {
+    createReview: "/review/createreview",
+    getReviewByCourse: "/review/getreview",
+    getSingleReview: "/review/getsinglereview",
+    updateReview: "/review/updatereview",
+    deleteReview: "/review/deletereview",
+  },
+  order: {
+    createorder: "/order/createorder",
+    getKeys: "/order/getkeys",
+    getPaymentprocess: "/order/getpaymentprocess",
+  },
+  aisearch: {
+    search: "/aisearch/getaisearch",
+  },
+  instructor: {
+    getInstructorDashboard: "/instructor/getinstructordashboard",
+    getInstructorCourse: "/instructor/getinstructorcourse",
+    getInstructororderOrders: "/instructor/getinstructororderorders",
+  },
+  contact: {
+    createContact: "/contactsupport/createcontactsupport",
+  },
+  notification: {
+    getNotifications: "/notification/getnotifications",
+    seenNotification: "/notification/seennotification",
+  },
+  schedule: {
+    createSchedule: "/schedule/createschedule",
+    getSchedule: "/schedule/getschedule",
+    getSingleSchedule: "/schedule/getsingleschedule",
+    updateSchedule: "/schedule/updateschedule",
+    liveStatus: "/schedule/liveschedule",
+  },
+  meeting: {
+    createMeeting: "/meeting/createmeeting",
+    getMeeting: "/meeting/getmeeting",
+    updateMeeting: "/meeting/updatemeeting",
+  },
+};
+
+export default endpoints;

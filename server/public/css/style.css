@@ -1,0 +1,136 @@
+:root {
+  --primary-color: #0056b3;
+  --primary-color-hover: #004494;
+  --background-color: #f4f7f9;
+  --card-background: #ffffff;
+  --text-color: #333;
+  --label-color: #555;
+  --border-color: #ddd;
+  --shadow-light: rgba(0, 0, 0, 0.05);
+  --shadow-medium: rgba(0, 0, 0, 0.1);
+}
+
+.form-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 40px;
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px var(--shadow-light);
+  border: 1px solid #eee;
+  margin: 0 auto;
+  height: fit-content;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-header h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.form-header p {
+  font-size: 1rem;
+  color: var(--label-color);
+  margin-top: 8px;
+}
+
+.registration-form .form-group {
+  margin-bottom: 20px;
+}
+
+.registration-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--label-color);
+}
+
+.registration-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.registration-form input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: var(--primary-color-hover);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Optional: Placeholder styling for better UX */
+::placeholder {
+  color: #b0b0b0;
+  font-style: italic;
+}
+.log-out {
+  cursor: pointer;
+}
+
+.form-check-input {
+  cursor: pointer;
+}
+
+.course-card {
+  gap: 20px;
+}
+
+.form-container-update {
+  width: 100%;
+  padding: 40px;
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px var(--shadow-light);
+  border: 1px solid #eee;
+  margin: 0 auto;
+  height: fit-content;
+}
+
+.manage-size {
+  font-size: 20px;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 300px;
+}
+
+.notification-dropdown {
+  height: 400px;
+  overflow-y: scroll !important;
+}
+
+.notification-dropdown::-webkit-scrollbar {
+  display: none;
+}
