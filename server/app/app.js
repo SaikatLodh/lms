@@ -6,6 +6,8 @@ const env = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const { RedisStore } = require("connect-redis");
+const redis = require("./config/redis");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const { setIO, userSocketIDs, onlineUsers } = require("./config/socketStore");
@@ -59,9 +61,15 @@ app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use(
   session({
+    store: new RedisStore({ client: redis }),
     secret: process.env.SESSOIN_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
   })
 );
 

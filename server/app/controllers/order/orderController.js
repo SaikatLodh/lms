@@ -64,6 +64,12 @@ class AnnouncementController {
           );
       }
 
+      if (!razorpay) {
+        return res
+          .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
+          .json(new apiError("Payment service not configured", STATUS_CODES.INTERNAL_SERVER_ERROR));
+      }
+
       const options = {
         amount: totalAmount * 100,
         currency: "INR",
