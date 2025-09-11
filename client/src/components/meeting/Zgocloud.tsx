@@ -22,21 +22,21 @@ const Zgocloud = () => {
   const [timeLeft, setTimeLeft] = useState<number>(7200);
   const router = useRouter();
 
-  // if (data && data?.endTime) {
-  //   function timeToMinutes(timeStr: string): number {
-  //     const [hours, minutes] = timeStr.split(":").map(Number);
-  //     return hours * 60 + minutes;
-  //   }
+  if (data && data?.endTime) {
+    function timeToMinutes(timeStr: string): number {
+      const [hours, minutes] = timeStr.split(":").map(Number);
+      return hours * 60 + minutes;
+    }
 
-  //   const currentTime = new Date();
-  //   const currentMinutes =
-  //     currentTime.getHours() * 60 + currentTime.getMinutes();
-  //   const targetMinutes = timeToMinutes(data?.endTime as string);
+    const currentTime = new Date();
+    const currentMinutes =
+      currentTime.getHours() * 60 + currentTime.getMinutes();
+    const targetMinutes = timeToMinutes(data?.endTime as string);
 
-  //   if (currentMinutes > targetMinutes) {
-  //     router.push(`/user/profile`);
-  //   }
-  // }
+    if (currentMinutes > targetMinutes) {
+      router.push(`/user/profile`);
+    }
+  }
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
