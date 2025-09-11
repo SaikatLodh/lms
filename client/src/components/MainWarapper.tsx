@@ -20,7 +20,6 @@ const MainWrapper = ({ children }: { children: React.ReactNode }) => {
       .then((res) => {
         if (res?.payload?.status === 200) {
           dispatch(getUser());
-          // router.push("/user/home");
         }
       })
       .finally(() => {
@@ -44,9 +43,6 @@ const MainWrapper = ({ children }: { children: React.ReactNode }) => {
     socket.on("connect", () => {
       console.log("Connected to server");
       const notificationAudio = new Audio("/mixkit-bell-notification-933.wav");
-      socket.on(ONLINE_USERS, (users) => {
-        console.log("users:", users);
-      });
 
       socket.on(USER_NOTIFICATION, (notification: Notification) => {
         notificationAudio.play().catch((error) => {

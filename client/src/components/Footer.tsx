@@ -5,7 +5,6 @@ import React from "react";
 
 const Footer = () => {
   const location = usePathname();
-  console.log(location);
   return (
     <>
       {!location.startsWith("/instructor") &&
