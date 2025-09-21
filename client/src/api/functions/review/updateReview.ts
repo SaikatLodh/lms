@@ -9,7 +9,7 @@ export const createReview = async ({
   data: { rating: number; comment: string };
 }) => {
   const response = await axiosInstance.patch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}${endpoints.review.updateReview}/${id}`,
+    `${endpoints.review.updateReview}/${id}`,
     data,
     { withCredentials: true }
   );

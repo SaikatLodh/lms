@@ -17,20 +17,10 @@ router
   .route("/getkeys")
   .get(verifyJwt, checkRoles(["user", "instructor"]), orderController.getKeys);
 
-router
-  .route("/getpaymentprocess/:id")
-  .post(
-    verifyJwt,
-    checkRoles(["user", "instructor"]),
-    orderController.getPaymentProcess
-  );
+router.route("/getpaymentprocess/:id").post(orderController.getPaymentProcess);
 
 router
   .route("/getpaymentprocessforcart")
-  .post(
-    verifyJwt,
-    checkRoles(["user", "instructor"]),
-    orderController.getPaymentProcessForCart
-  );
+  .post(orderController.getPaymentProcessForCart);
 
 module.exports = router;

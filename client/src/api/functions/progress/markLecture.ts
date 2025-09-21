@@ -6,7 +6,7 @@ const markLectures = async (
   lectureId: string
 ): Promise<{ status: number; message: string }> => {
   const response = await axiosInstance.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL}${endpoints.progress.markCurrentLectureAsViewed}/${courseId}/${lectureId}`,
+    `${endpoints.progress.markCurrentLectureAsViewed}/${courseId}/${lectureId}`,
     { withCredentials: true }
   );
   return response.data as { status: number; message: string };

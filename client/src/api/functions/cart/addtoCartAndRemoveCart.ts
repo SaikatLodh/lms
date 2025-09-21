@@ -3,7 +3,7 @@ import endpoints from "@/api/endpoints/endPoints";
 
 const addtoCartAndRemoveCart = async (id: string): Promise<void> => {
   const response = await axiosInstance.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL}${endpoints.cart.addtoCartAndRemoveCart}/${id}`,
+    `${endpoints.cart.addtoCartAndRemoveCart}/${id}`,
     { withCredentials: true }
   );
   return response.data.data;

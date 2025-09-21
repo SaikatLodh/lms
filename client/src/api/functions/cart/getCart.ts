@@ -3,10 +3,9 @@ import endpoints from "@/api/endpoints/endPoints";
 import { Cart } from "@/types";
 
 const getCart = async (): Promise<Cart[]> => {
-  const response = await axiosInstance.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL}${endpoints.cart.getCart}`,
-    { withCredentials: true }
-  );
+  const response = await axiosInstance.get(`${endpoints.cart.getCart}`, {
+    withCredentials: true,
+  });
   return response.data.data.cart as Cart[];
 };
 

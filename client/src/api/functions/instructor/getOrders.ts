@@ -4,7 +4,7 @@ import { LecturerOrder } from "@/types";
 
 const getOrders = async (): Promise<LecturerOrder[]> => {
   const response = await axiosInstance.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL}${endpoints.instructor.getInstructororderOrders}`,
+    `${endpoints.instructor.getInstructororderOrders}`,
     { withCredentials: true }
   );
   return response.data.data as LecturerOrder[];

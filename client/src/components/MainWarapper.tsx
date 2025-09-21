@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getUser, refreshToken, resetLoading } from "@/store/auth/authSlice";
-import { useRouter } from "next/navigation";
 import { USER_NOTIFICATION, ONLINE_USERS } from "@/socketkeys/socketKeys";
 import { useGlobalHooks } from "@/hooks/globalHook";
 import { NOTIFICATION } from "@/hooks/react-query/react-keys/querykeys";
@@ -12,7 +11,7 @@ import { Notification } from "@/types";
 
 const MainWrapper = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
+
   const { queryClient } = useGlobalHooks();
 
   useEffect(() => {
@@ -25,7 +24,7 @@ const MainWrapper = ({ children }: { children: React.ReactNode }) => {
       .finally(() => {
         dispatch(resetLoading());
       });
-  }, [dispatch, router]);
+  }, [dispatch]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {

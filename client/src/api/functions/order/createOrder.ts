@@ -13,7 +13,7 @@ const createOrder = async (data: {
   OrderId: string;
 }> => {
   const response = await axiosInstance.post(
-    `${process.env.NEXT_PUBLIC_BASE_URL}${endpoints.order.createorder}`,
+    `${endpoints.order.createorder}`,
     data,
     { withCredentials: true }
   );
