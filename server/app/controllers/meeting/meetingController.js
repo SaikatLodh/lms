@@ -1,5 +1,5 @@
 const Meeting = require("../../models/meetingModel");
-const Schedule = require("../../models/scheduleNodel");
+const Schedule = require("../../models/scheduleModel");
 const Notification = require("../../models/notificationModel");
 const Course = require("../../models/courseModel");
 const User = require("../../models/userModel");

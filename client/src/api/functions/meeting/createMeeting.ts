@@ -2,13 +2,13 @@ import { axiosInstance } from "@/api/axiosinstance/axiosInstance";
 import endpoints from "@/api/endpoints/endPoints";
 
 const createMeeting = async (data: {
-  courseId: string;
-  userId: string;
-  scheduleId: string;
-  meetingName: string;
+  courseId: string | null;
+  userId: string | null;
+  scheduleId: string | null;
+  meetingName: string | null;
   duration: number;
-  date: Date;
-  startTime: string;
+  date: Date | null;
+  startTime: string | null;
 }) => {
   const response = await axiosInstance.post(
     endpoints.meeting.createMeeting,

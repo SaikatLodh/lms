@@ -12,13 +12,12 @@ import { useUpdateSchedule } from "@/hooks/react-query/react-hooks/schedule/sced
 const ScheduleCalcel = ({
   open,
   setOpen,
-  schedule,
+  id,
 }: {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  schedule: Schedule;
+  id: string;
 }) => {
-  const { _id } = schedule;
   const { mutate, isPending } = useUpdateSchedule();
 
   const handleCancel = () => {
@@ -26,7 +25,7 @@ const ScheduleCalcel = ({
       status: "Cancelled",
     };
     mutate(
-      { data, scheduleId: _id },
+      { data, scheduleId: id },
       {
         onSuccess: () => {
           setOpen(false);

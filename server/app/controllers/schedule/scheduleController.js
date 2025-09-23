@@ -1,4 +1,4 @@
-const Schedule = require("../../models/scheduleNodel");
+const Schedule = require("../../models/scheduleModel");
 const Notification = require("../../models/notificationModel");
 const Course = require("../../models/courseModel");
 const apiResponse = require("../../config/apiResponse");
@@ -18,7 +18,7 @@ class ScheduleController {
   async createSchedule(req, res) {
     try {
       const { courseId, instuctorId, reason, date, time } = req.body;
-      const userId = req.user._id;
+      const userId = req.user._id.toString();
 
       if (!mongooseValidObjectId(userId)) {
         return res
@@ -56,10 +56,17 @@ class ScheduleController {
           );
       }
 
-      const getScheduleFromRedis = await redis.get(`${SCHEDULE}:${userId}`);
+      const getScheduleForUser = await redis.get(`${SCHEDULE}:${userId}`);
+      const getScheduleForInstructor = await redis.get(
+        `${SCHEDULE}:${instuctorId}`
+      );
 
-      if (getScheduleFromRedis) {
+      if (getScheduleForUser) {
         await redis.del(`${SCHEDULE}:${userId}`);
+      }
+
+      if (getScheduleForInstructor) {
+        await redis.del(`${SCHEDULE}:${instuctorId}`);
       }
 
       const getCourse = await Course.findById(courseId);
@@ -267,17 +274,38 @@ class ScheduleController {
           );
       }
 
-      const getScheduleFromRedis = await redis.keys(`${SCHEDULE}:${userId}`);
+      const getScheduleFromRedis = await redis.keys(
+        `${SCHEDULE}:${getSchedule.userId.toString()}`
+      );
       const getSingleScheduleFromRedis = await redis.get(
-        `${SCHEDULE}:${userId}:${scheduleId}`
+        `${SCHEDULE}:${getSchedule.userId.toString()}:${scheduleId}`
       );
 
       if (getScheduleFromRedis) {
-        await redis.del(`${SCHEDULE}:${userId}`);
+        await redis.del(`${SCHEDULE}:${getSchedule.userId.toString()}`);
       }
 
       if (getSingleScheduleFromRedis) {
-        await redis.del(`${SCHEDULE}:${userId}:${scheduleId}`);
+        await redis.del(
+          `${SCHEDULE}:${getSchedule.userId.toString()}:${scheduleId}`
+        );
+      }
+
+      const getScheduleForInstructor = await redis.keys(
+        `${SCHEDULE}:${getSchedule.instuctorId.toString()}`
+      );
+      const getSingleScheduleForInstructor = await redis.get(
+        `${SCHEDULE}:${getSchedule.instuctorId.toString()}:${scheduleId}`
+      );
+
+      if (getScheduleForInstructor) {
+        await redis.del(`${SCHEDULE}:${getSchedule.instuctorId.toString()}`);
+      }
+
+      if (getSingleScheduleForInstructor) {
+        await redis.del(
+          `${SCHEDULE}:${getSchedule.instuctorId.toString()}:${scheduleId}`
+        );
       }
 
       if (

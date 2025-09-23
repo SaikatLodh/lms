@@ -57,12 +57,14 @@ const EditMeeting = ({
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
   const { user } = useSelector((state: RootState) => state.auth);
   const { data } = useSingleSchedule(id);
   const { mutate, isPending } = useUpdateSchedule();
+
   const onSubmit = (data: FormData) => {
     mutate(
       {
@@ -85,6 +87,12 @@ const EditMeeting = ({
       setValue("status", data.status);
     }
   }, [data, setValue]);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
   return (
     <>
       <Dialog open={openCreate} onOpenChange={setOpenCreate}>
@@ -199,7 +207,7 @@ const EditMeeting = ({
                             <SelectItem value="Waiting">Waiting</SelectItem>
                             <SelectItem value="Scheduled">Scheduled</SelectItem>
                             <SelectItem value="Completed">Completed</SelectItem>
-                            <SelectItem value="Canceled">Canceled</SelectItem>
+                            <SelectItem value="Cancelled">Cancelled</SelectItem>
                           </SelectContent>
                         </Select>
                       )}

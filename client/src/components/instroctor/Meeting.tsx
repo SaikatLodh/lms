@@ -26,23 +26,33 @@ import { usePathname } from "next/navigation";
 import moment from "moment";
 import ScheduleCalcel from "./ScheduleCalcel";
 import Link from "next/link";
+import { Schedule } from "@/types";
 
 const Meeting = () => {
   const [openCreate, setOpenCreate] = useState(false);
   const [openCreateMeeting, setOpenCreateMeeting] = useState(false);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [scheduleId, setScheduleId] = useState("");
+  const [schedule, setSchedule] = useState<Schedule | null>(null);
   const { user } = useSelector((state: RootState) => state.auth);
   const { data, isLoading } = useGetSchedule();
   const { mutate } = useLiveSchedule();
   const location = usePathname();
 
-  function handleEditClick() {
+  function handleEditClick(id: string) {
     setOpenCreate(true);
+    setScheduleId(id);
   }
 
-  function handleCreateMeeting() {
+  function handleCreateMeeting(m: Schedule) {
     setOpenCreateMeeting(true);
+    setSchedule(m);
+  }
+
+  function handelCancelClick(id: string) {
+    setOpen(true);
+    setScheduleId(id);
   }
 
   const filteredMeetings =
@@ -150,7 +160,7 @@ const Meeting = () => {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={handleEditClick}
+                                onClick={() => handleEditClick(m._id)}
                                 className="cursor-pointer"
                                 disabled={
                                   m.status === "Scheduled" ||
@@ -173,7 +183,7 @@ const Meeting = () => {
                                 }
                                 size="sm"
                                 variant="destructive"
-                                onClick={() => setOpen(true)}
+                                onClick={() => handelCancelClick(m._id)}
                                 className="cursor-pointer"
                               >
                                 <X className="mr-2 h-3 w-3" /> Cancel
@@ -181,8 +191,15 @@ const Meeting = () => {
                               {user?.role === "instructor" && !m.meetingUrl && (
                                 <Button
                                   size="sm"
-                                  onClick={handleCreateMeeting}
+                                  onClick={() => handleCreateMeeting(m)}
                                   className="cursor-pointer"
+                                  disabled={
+                                    m.status === "Completed" ||
+                                    m.status === "Live" ||
+                                    m.status === "Cancelled"
+                                      ? true
+                                      : false
+                                  }
                                 >
                                   Create meeting
                                 </Button>
@@ -212,18 +229,17 @@ const Meeting = () => {
                           <EditMeeting
                             openCreate={openCreate}
                             setOpenCreate={setOpenCreate}
-                            id={m._id}
+                            id={scheduleId}
                           />
                           <CreateMeeting
                             openCreateMeeting={openCreateMeeting}
                             setOpenCreateMeeting={setOpenCreateMeeting}
-                            course={m.course}
-                            schedule={m}
+                            schedule={schedule}
                           />
                           <ScheduleCalcel
                             open={open}
                             setOpen={setOpen}
-                            schedule={m}
+                            id={scheduleId}
                           />
                         </TableRow>
                       ))}

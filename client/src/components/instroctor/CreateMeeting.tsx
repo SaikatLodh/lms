@@ -33,13 +33,11 @@ type FormData = z.infer<typeof schema>;
 const CreateMeeting = ({
   openCreateMeeting,
   setOpenCreateMeeting,
-  course,
   schedule,
 }: {
   openCreateMeeting: boolean;
   setOpenCreateMeeting: React.Dispatch<React.SetStateAction<boolean>>;
-  course: SingleUserCourse;
-  schedule: Schedule;
+  schedule: Schedule | null;
 }) => {
   const {
     control,
@@ -50,6 +48,7 @@ const CreateMeeting = ({
     resolver: zodResolver(schema),
   });
   const { mutate, isPending } = useCreateMeeting();
+
   const onSubmit = (data: FormData) => {
     const durationMap: Record<string, number> = {
       "15m": 15,
@@ -60,11 +59,11 @@ const CreateMeeting = ({
     const dataToSend = {
       ...data,
       duration: durationMap[data.duration],
-      courseId: course._id,
-      userId: schedule.userId,
-      scheduleId: schedule._id,
-      date: schedule.date,
-      startTime: schedule.time,
+      courseId: schedule && schedule.courseId,
+      userId: schedule && schedule.userId,
+      scheduleId: schedule && schedule._id,
+      date: schedule && schedule.date,
+      startTime: schedule && schedule.time,
     };
 
     mutate(dataToSend, {

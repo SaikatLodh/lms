@@ -9,7 +9,7 @@ const {
 } = require("../../helpers/validation/review/reviewValidation");
 const mongooseValidObjectId = require("mongoose").isValidObjectId;
 const redis = require("../../config/redis");
-const { REVIEW } = require("../../config/redisKey");
+const { REVIEW, COURSE } = require("../../config/redisKey");
 
 class ReviewController {
   async createReview(req, res) {
@@ -85,9 +85,14 @@ class ReviewController {
           );
       }
 
-      const getCourse = await redis.get(`${REVIEW}:${courseId}`);
+      const getCourse = await redis.get(`${COURSE}:${courseId}`);
+      const getReview = await redis.get(`${REVIEW}:${courseId}`);
 
       if (getCourse) {
+        await redis.del(`${COURSE}:${courseId}`);
+      }
+
+      if (getReview) {
         await redis.del(`${REVIEW}:${courseId}`);
       }
 
@@ -297,15 +302,15 @@ class ReviewController {
       }
 
       const getCourse = await redis.get(
-        `${REVIEW}:${updateReview.courseId.toString()}`
+        `${COURSE}:${updateReview.courseId.toString()}`
       );
-      const getSingleCourseFromRedis = await redis.get(`${REVIEW}:${reviewId}`);
+      const getSingleReviewFromRedis = await redis.get(`${REVIEW}:${reviewId}`);
 
       if (getCourse) {
-        await redis.del(`${REVIEW}:${updateReview.courseId.toString()}`);
+        await redis.del(`${COURSE}:${updateReview.courseId.toString()}`);
       }
 
-      if (getSingleCourseFromRedis) {
+      if (getSingleReviewFromRedis) {
         await redis.del(`${REVIEW}:${reviewId}`);
       }
 
@@ -380,15 +385,15 @@ class ReviewController {
       }
 
       const getCourse = await redis.get(
-        `${REVIEW}:${deleteReview.courseId.toString()}`
+        `${COURSE}:${deleteReview.courseId.toString()}`
       );
-      const getSingleCourseFromRedis = await redis.get(`${REVIEW}:${reviewId}`);
+      const getSingleReviewFromRedis = await redis.get(`${REVIEW}:${reviewId}`);
 
       if (getCourse) {
-        await redis.del(`${REVIEW}:${deleteReview.courseId.toString()}`);
+        await redis.del(`${COURSE}:${deleteReview.courseId.toString()}`);
       }
 
-      if (getSingleCourseFromRedis) {
+      if (getSingleReviewFromRedis) {
         await redis.del(`${REVIEW}:${reviewId}`);
       }
 

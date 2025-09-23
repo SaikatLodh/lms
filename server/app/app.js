@@ -66,7 +66,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     },
@@ -133,7 +133,7 @@ io.on("connection", (socket) => {
   const user = socket.user;
   userSocketIDs.set(user._id.toString(), socket.id);
   onlineUsers.add(user._id.toString());
-
+  console.log(userSocketIDs, onlineUsers);
   io.emit(ONLINE_USERS, Array.from(onlineUsers));
 
   socket.on("disconnect", () => {

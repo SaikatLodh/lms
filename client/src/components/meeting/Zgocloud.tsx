@@ -22,21 +22,72 @@ const Zgocloud = () => {
   const [timeLeft, setTimeLeft] = useState<number>(7200);
   const router = useRouter();
 
-  if (data && data?.endTime) {
-    function timeToMinutes(timeStr: string): number {
-      const [hours, minutes] = timeStr.split(":").map(Number);
-      return hours * 60 + minutes;
-    }
+  // Date comparison function
+  const compareDates = (createdAt: string) => {
+    const currentDate = new Date();
+    const meetingDate = new Date(createdAt);
 
-    const currentTime = new Date();
-    const currentMinutes =
-      currentTime.getHours() * 60 + currentTime.getMinutes();
-    const targetMinutes = timeToMinutes(data?.endTime as string);
+    // Reset time to compare only dates
+    const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const meetingDateOnly = new Date(meetingDate.getFullYear(), meetingDate.getMonth(), meetingDate.getDate());
 
-    if (currentMinutes > targetMinutes) {
-      router.push(`/user/profile`);
+    const diffTime = currentDateOnly.getTime() - meetingDateOnly.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return {
+      diffDays,
+      isToday: diffDays === 0,
+      isYesterday: diffDays === 1,
+      isOlder: diffDays > 1,
+      meetingDate: meetingDateOnly,
+      currentDate: currentDateOnly
+    };
+  };
+
+  // Check if meeting was created today or is old
+  const dateComparison = data?.createdAt ? compareDates(data.createdAt) : null;
+
+  // Handle meeting validation and redirects
+  useEffect(() => {
+    if (data && data?.endTime && data?.date) {
+      function timeToMinutes(timeStr: string): number {
+        const [hours, minutes] = timeStr.split(":").map(Number);
+        return hours * 60 + minutes;
+      }
+
+      const currentDateTime = new Date();
+      const meetingDate = new Date(data.date);
+
+      // Reset time to compare only dates
+      const currentDate = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate());
+      const meetingDateOnly = new Date(meetingDate.getFullYear(), meetingDate.getMonth(), meetingDate.getDate());
+
+      const currentMinutes = currentDateTime.getHours() * 60 + currentDateTime.getMinutes();
+      const targetMinutes = timeToMinutes(data.endTime);
+
+      console.log('Current date:', currentDate.toISOString());
+      console.log('Meeting date:', meetingDateOnly.toISOString());
+      console.log('Current time (minutes):', currentMinutes);
+      console.log('Meeting end time (minutes):', targetMinutes);
+
+      // Check if meeting date is in the past
+      if (meetingDateOnly < currentDate) {
+        console.log('Meeting date is in the past, redirecting to profile');
+        router.push(`/user/profile`);
+        return;
+      }
+
+      // Check if meeting date is today but time has passed
+      if (meetingDateOnly.getTime() === currentDate.getTime() && currentMinutes > targetMinutes) {
+        console.log('Meeting time has passed today, redirecting to profile');
+        router.push(`/user/profile`);
+        return;
+      }
+
+      // Meeting is either today and time hasn't passed, or in the future - allow access
+      console.log('Meeting is valid - allowing access');
     }
-  }
+  }, [data, router]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -110,12 +161,30 @@ const Zgocloud = () => {
     }
   }, [timeLeft, mutate, router]);
 
+  // Format date for display
+  const formatDateDisplay = (dateComparison: any) => {
+    if (dateComparison.isToday) {
+      return "Created: Today";
+    } else if (dateComparison.isYesterday) {
+      return "Created: Yesterday";
+    } else if (dateComparison.diffDays <= 7) {
+      return `Created: ${dateComparison.diffDays} days ago`;
+    } else {
+      return `Created: ${dateComparison.diffDays} days ago`;
+    }
+  };
+
   return (
     <>
       <div ref={containerRef} className="w-full h-screen relative">
         <div className="absolute top-5 left-10 text-[#557BFF] text-[50px] z-[7000]">
           {formatTime(timeLeft)}
         </div>
+        {dateComparison && (
+          <div className="absolute top-5 right-10 text-white text-lg z-[7000] bg-black/50 px-3 py-1 rounded">
+            {formatDateDisplay(dateComparison)}
+          </div>
+        )}
       </div>
     </>
   );
