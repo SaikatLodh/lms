@@ -225,10 +225,40 @@ class MeetingController {
           );
       }
 
-      const keys = await redis.keys(`${SCHEDULE}:*`);
+      const getScheduleFromRedis = await redis.keys(
+        `${SCHEDULE}:${updateUrlToSchedule.userId.toString()}`
+      );
+      const getSingleScheduleFromRedis = await redis.get(
+        `${SCHEDULE}:${updateUrlToSchedule.userId.toString()}:${scheduleId}`
+      );
 
-      if (keys.length > 0) {
-        await redis.del(keys);
+      if (getScheduleFromRedis) {
+        await redis.del(`${SCHEDULE}:${updateUrlToSchedule.userId.toString()}`);
+      }
+
+      if (getSingleScheduleFromRedis) {
+        await redis.del(
+          `${SCHEDULE}:${updateUrlToSchedule.userId.toString()}:${scheduleId}`
+        );
+      }
+
+      const getScheduleForInstructor = await redis.keys(
+        `${SCHEDULE}:${updateUrlToSchedule.instuctorId.toString()}`
+      );
+      const getSingleScheduleForInstructor = await redis.get(
+        `${SCHEDULE}:${updateUrlToSchedule.instuctorId.toString()}:${scheduleId}`
+      );
+
+      if (getScheduleForInstructor) {
+        await redis.del(
+          `${SCHEDULE}:${updateUrlToSchedule.instuctorId.toString()}`
+        );
+      }
+
+      if (getSingleScheduleForInstructor) {
+        await redis.del(
+          `${SCHEDULE}:${updateUrlToSchedule.instuctorId.toString()}:${scheduleId}`
+        );
       }
 
       return res
