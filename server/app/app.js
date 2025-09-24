@@ -6,8 +6,6 @@ const env = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const { RedisStore } = require("connect-redis");
-const redis = require("./config/redis");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const { setIO, userSocketIDs, onlineUsers } = require("./config/socketStore");
@@ -61,15 +59,9 @@ app.use(express.static(path.join(__dirname, "uploads")));
 
 app.use(
   session({
-    store: new RedisStore({ client: redis }),
     secret: process.env.SESSOIN_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
   })
 );
 
@@ -133,7 +125,7 @@ io.on("connection", (socket) => {
   const user = socket.user;
   userSocketIDs.set(user._id.toString(), socket.id);
   onlineUsers.add(user._id.toString());
-  console.log(userSocketIDs, onlineUsers);
+
   io.emit(ONLINE_USERS, Array.from(onlineUsers));
 
   socket.on("disconnect", () => {

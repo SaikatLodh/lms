@@ -128,7 +128,10 @@ class RenderAuthController {
         expires: new Date(0),
       };
       req.flash("success", "You are logged out successfully");
-      return res.clearCookie("accessToken", options).redirect("/login");
+      return res
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .redirect("/login");
     } catch (error) {
       req.flash("error", error.message);
       return res.redirect("/");

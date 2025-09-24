@@ -23,7 +23,9 @@ const Logout = ({
     dispatch(logout());
     queryClient.removeQueries();
     setOpen(false);
-    window.location.href = "/user/home";
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
   return (
