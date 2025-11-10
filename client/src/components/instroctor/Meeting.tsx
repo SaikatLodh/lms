@@ -205,24 +205,30 @@ const Meeting = () => {
                                 </Button>
                               )}
                               {m.meetingUrl && (
-                                <Link
-                                  href={
-                                    `${
-                                      m.status === "Waiting"
-                                        ? ""
-                                        : `/meeting/${m.meetingUrl}/${m._id}/${m.meetingId}`
-                                    }` || ""
-                                  }
-                                >
-                                  <Button
-                                    size="sm"
-                                    className="cursor-pointer"
-                                    disabled={m.status === "Waiting"}
-                                    onClick={() => mutate(m._id)}
+                                <>
+                                  <Link
+                                    href={
+                                      `${
+                                        m.status === "Waiting" ||
+                                        m.status === "Completed"
+                                          ? ""
+                                          : `/meeting/${m.meetingUrl}/${m._id}/${m.meetingId}`
+                                      }` || ""
+                                    }
                                   >
-                                    Go to meeting
-                                  </Button>
-                                </Link>
+                                    <Button
+                                      size="sm"
+                                      className="cursor-pointer"
+                                      disabled={
+                                        m.status === "Waiting" ||
+                                        m.status === "Completed"
+                                      }
+                                      onClick={() => mutate(m._id)}
+                                    >
+                                      Go to meeting
+                                    </Button>
+                                  </Link>
+                                </>
                               )}
                             </div>
                           </TableCell>

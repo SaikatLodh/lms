@@ -22,7 +22,7 @@ class InstructorController {
           ]),
           Order.countDocuments({ instructorId }),
           Order.aggregate([
-            { $match: { instructorId: instructorId } },
+            { $match: { instructorId: instructorId, orderStatus: "paid" } },
             {
               $group: {
                 _id: null,
@@ -197,7 +197,6 @@ class InstructorController {
         {
           $match: {
             instructorId: instructorId,
-            orderStatus: "paid",
           },
         },
         {

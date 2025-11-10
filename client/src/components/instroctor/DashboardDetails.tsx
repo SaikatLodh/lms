@@ -50,7 +50,10 @@ const DashboardDetails = ({
               {item.icon}
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{item.value}</div>
+              <div className="text-2xl font-bold">
+                {" "}
+                {item.title === "Total Revenue" ? "₹" : ""} {item.value}
+              </div>
             </CardContent>
           </Card>
         ))}

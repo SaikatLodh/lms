@@ -68,6 +68,7 @@ export default function AvatarGroupMaxAvatarDemo({ user }: { user: Image[] }) {
                   ""
                 }
                 alt="@shadcn"
+                className="object-cover"
               />
               <AvatarFallback className="bg-indigo-500 text-white">
                 {item?.fullName.slice(0, 1)}

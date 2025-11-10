@@ -72,7 +72,7 @@ function NotificationItem({
         <div className="flex items-start gap-3">
           <div className="relative">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={getAvatarUrl(n)} alt={n.senderId?.fullName} />
+              <AvatarImage src={getAvatarUrl(n)} alt={n.senderId?.fullName} className="object-cover"/>
               <AvatarFallback className="font-medium">
                 {n.senderId?.fullName?.slice(0, 2)?.toUpperCase() || "NA"}
               </AvatarFallback>

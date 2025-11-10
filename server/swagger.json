@@ -1,0 +1,103 @@
+{
+  "swaggerDefinition": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "LMS API",
+      "version": "1.0.0",
+      "description": "API documentation for the Learning Management System",
+      "contact": {
+        "name": "Saikat Lodh"
+      }
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5000/api/v1"
+      }
+    ],
+    "components": {
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "tags": [
+      {
+        "name": "Authentication",
+        "description": "Authentication API"
+      },
+      {
+        "name": "User",
+        "description": "User API"
+      },
+      {
+        "name": "Courses",
+        "description": "Courses API"
+      },
+      {
+        "name": "Lectures",
+        "description": "Lectures API"
+      },
+      {
+        "name": "Admin",
+        "description": "Admin API"
+      },
+      {
+        "name": "Instructor",
+        "description": "Instructor API"
+      },
+      {
+        "name": "Orders",
+        "description": "Orders API"
+      },
+      {
+        "name": "Cart",
+        "description": "Cart API"
+      },
+      {
+        "name": "Wishlist",
+        "description": "Wishlist API"
+      },
+      {
+        "name": "Reviews",
+        "description": "Reviews API"
+      },
+      {
+        "name": "Course Progress",
+        "description": "Course Progress API"
+      },
+      {
+        "name": "Announcements",
+        "description": "Announcements API"
+      },
+      {
+        "name": "AI Search",
+        "description": "AI Search API"
+      },
+      {
+        "name": "Contact Support",
+        "description": "Contact Support API"
+      },
+      {
+        "name": "Notifications",
+        "description": "Notifications API"
+      },
+      {
+        "name": "Schedules",
+        "description": "Schedules API"
+      },
+      {
+        "name": "Meetings",
+        "description": "Meetings API"
+      }
+    ]
+  },
+  "apis": ["./app/app.js", "./app/routes/**/*.js"]
+}

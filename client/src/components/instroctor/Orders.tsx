@@ -86,6 +86,7 @@ const Orders = () => {
                               ""
                             }
                             alt="@shadcn"
+                            className="object-cover"
                           />
                           <AvatarFallback>
                             {order.users.fullName.slice(0, 1)}
@@ -101,6 +102,7 @@ const Orders = () => {
                           <AvatarImage
                             src={order?.courses?.image?.url || ""}
                             alt="@shadcn"
+                            className="object-cover"
                           />
                           <AvatarFallback>
                             {order.courses.category.slice(0, 1)}

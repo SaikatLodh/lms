@@ -9,6 +9,7 @@ const Footer = () => {
     <>
       {!location.startsWith("/instructor") &&
       !location.startsWith("/meeting") &&
+      location !== "/" &&
       location !== "/log-in" &&
       location !== "/register" &&
       location !== "/send-mail" &&

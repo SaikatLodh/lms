@@ -11,6 +11,8 @@ const methodOverride = require("method-override");
 const { setIO, userSocketIDs, onlineUsers } = require("./config/socketStore");
 const { ONLINE_USERS } = require("./config/socketKeys");
 const socketAuthenticator = require("./middleware/socketAuthenticator");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 
 const app = express();
 const server = http.createServer(app);
@@ -66,6 +68,14 @@ app.use(
 );
 
 app.use(flash());
+
+// Swagger options
+const swaggerOptions = require("../swagger.json");
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Serve Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const authRoute = require("./routes/auth/api/authRoutes");
 const adminRoute = require("./routes/admin/api/adminRoute");

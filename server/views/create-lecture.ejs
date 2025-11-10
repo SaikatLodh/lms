@@ -79,13 +79,21 @@
 
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Must be at least 6 to 20 characters"
-                    required
-                  />
+                  <div class="input-group">
+                    <input
+                      type="password"
+                      id="password"
+                      name="password"
+                      placeholder="Must be at least 6 to 20 characters"
+                      class="form-control"
+                      required
+                    />
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary toggle-password" data-target="password">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 <button type="submit" class="submit-btn">Sign Up</button>
@@ -140,6 +148,19 @@
         $('.registration-form').on('submit', function(e) {
           var button = $(this).find('.submit-btn');
           button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Signing Up...');
+        });
+
+        $('.toggle-password').on('click', function() {
+          var targetId = $(this).data('target');
+          var input = $('#' + targetId);
+          var icon = $(this).find('i');
+          if (input.attr('type') === 'password') {
+            input.attr('type', 'text');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+          } else {
+            input.attr('type', 'password');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+          }
         });
       });
     </script>
