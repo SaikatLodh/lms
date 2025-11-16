@@ -868,6 +868,7 @@ class authController {
           );
       }
     } catch (error) {
+      console.log(error);
       return res
         .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
         .json(new ApiError(error.message, STATUS_CODES.INTERNAL_SERVER_ERROR));

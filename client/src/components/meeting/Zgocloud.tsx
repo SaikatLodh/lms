@@ -28,8 +28,16 @@ const Zgocloud = () => {
     const meetingDate = new Date(createdAt);
 
     // Reset time to compare only dates
-    const currentDateOnly = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    const meetingDateOnly = new Date(meetingDate.getFullYear(), meetingDate.getMonth(), meetingDate.getDate());
+    const currentDateOnly = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate()
+    );
+    const meetingDateOnly = new Date(
+      meetingDate.getFullYear(),
+      meetingDate.getMonth(),
+      meetingDate.getDate()
+    );
 
     const diffTime = currentDateOnly.getTime() - meetingDateOnly.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -40,7 +48,7 @@ const Zgocloud = () => {
       isYesterday: diffDays === 1,
       isOlder: diffDays > 1,
       meetingDate: meetingDateOnly,
-      currentDate: currentDateOnly
+      currentDate: currentDateOnly,
     };
   };
 
@@ -59,35 +67,49 @@ const Zgocloud = () => {
       const meetingDate = new Date(data.date);
 
       // Reset time to compare only dates
-      const currentDate = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate());
-      const meetingDateOnly = new Date(meetingDate.getFullYear(), meetingDate.getMonth(), meetingDate.getDate());
+      const currentDate = new Date(
+        currentDateTime.getFullYear(),
+        currentDateTime.getMonth(),
+        currentDateTime.getDate()
+      );
+      const meetingDateOnly = new Date(
+        meetingDate.getFullYear(),
+        meetingDate.getMonth(),
+        meetingDate.getDate()
+      );
 
-      const currentMinutes = currentDateTime.getHours() * 60 + currentDateTime.getMinutes();
+      const currentMinutes =
+        currentDateTime.getHours() * 60 + currentDateTime.getMinutes();
       const targetMinutes = timeToMinutes(data.endTime);
 
-      console.log('Current date:', currentDate.toISOString());
-      console.log('Meeting date:', meetingDateOnly.toISOString());
-      console.log('Current time (minutes):', currentMinutes);
-      console.log('Meeting end time (minutes):', targetMinutes);
+      console.log("Current date:", currentDate.toISOString());
+      console.log("Meeting date:", meetingDateOnly.toISOString());
+      console.log("Current time (minutes):", currentMinutes);
+      console.log("Meeting end time (minutes):", targetMinutes);
 
       // Check if meeting date is in the past
       if (meetingDateOnly < currentDate) {
-        console.log('Meeting date is in the past, redirecting to profile');
+        console.log("Meeting date is in the past, redirecting to profile");
+        mutate();
         router.push(`/user/profile`);
         return;
       }
 
       // Check if meeting date is today but time has passed
-      if (meetingDateOnly.getTime() === currentDate.getTime() && currentMinutes > targetMinutes) {
-        console.log('Meeting time has passed today, redirecting to profile');
+      if (
+        meetingDateOnly.getTime() === currentDate.getTime() &&
+        currentMinutes > targetMinutes
+      ) {
+        console.log("Meeting time has passed today, redirecting to profile");
+        mutate();
         router.push(`/user/profile`);
         return;
       }
 
       // Meeting is either today and time hasn't passed, or in the future - allow access
-      console.log('Meeting is valid - allowing access');
+      console.log("Meeting is valid - allowing access");
     }
-  }, [data, router]);
+  }, [data, router, mutate]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

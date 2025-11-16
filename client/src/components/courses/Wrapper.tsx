@@ -1,6 +1,5 @@
 "use client";
-
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import LeftBar from "./LeftBar";
 import Courses from "./Courses";
 import { useUserCourses } from "@/hooks/react-query/react-hooks/courses/coursesHook";
@@ -12,14 +11,23 @@ const Wrapper = () => {
   const { data, isLoading } = useUserCourses();
   const [serch, setSerch] = useState("");
   const [searchResult] = useDebounce(serch, 500);
-  const MIN_PRICE = data && Math.min(...data.map((course) => course.pricing));
-  const MAX_PRICE = data && Math.max(...data.map((course) => course.pricing));
+  const MIN_PRICE = data ? Math.min(...data.map((course) => course.pricing)) : 0;
+  const MAX_PRICE = data ? Math.max(...data.map((course) => course.pricing)) : 10000; // Set a reasonable default max
   const [value, setValue] = useState<PriceRange>({
-    from: MIN_PRICE as number,
-    to: MAX_PRICE as number,
+    from: MIN_PRICE,
+    to: MAX_PRICE,
   });
   const [rating, setRating] = useState<number | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  // Update price range when data is loaded
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const minPrice = Math.min(...data.map((course) => course.pricing));
+      const maxPrice = Math.max(...data.map((course) => course.pricing));
+      setValue({ from: minPrice, to: maxPrice });
+    }
+  }, [data]);
 
   const removeDublicatesCategories = data
     ? new Set([...data.map((course) => course.category)].flat())

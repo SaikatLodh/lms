@@ -14,15 +14,16 @@ import ReviewsSection from "@/components/review/ReviewsSection";
 import ReviewForm from "../review/ReviewForm";
 import StarRating from "../review/StarRating";
 import SuggestedCourse from "./SuggestedCourse";
+import SingleCourseSkeleton from "./SingleCourseSkeleton";
 
 const SingleCourse = () => {
   const { id } = useParams();
-  const { data } = useSingleuserCourse(id as string);
+  const { data, isLoading } = useSingleuserCourse(id as string);
   const getData = data && data[0];
   const { user, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [paymentLoading, setPaymentLoading] = React.useState(false);
 
   const rating = getData?.reviews.reduce((acc, curr) => acc + curr.rating, 0);
   const totalReviews = getData?.reviews?.length || 0;
@@ -47,6 +48,10 @@ const SingleCourse = () => {
             100,
         ]
       : [0, 0, 0, 0, 0];
+
+  if (isLoading) {
+    return <SingleCourseSkeleton />;
+  }
 
   return (
     <>
@@ -182,11 +187,11 @@ const SingleCourse = () => {
                         className="w-full text-lg py-6 cursor-pointer border-1 bg-[#6D28D2] text-white hover:bg-[#EDE5F9] hover:text-[#6D28D2] hover:border-1 hover:border-[#6D28D2]"
                         size="lg"
                         onClick={() =>
-                          handelPayment(getData, setIsLoading, user)
+                          handelPayment(getData, setPaymentLoading, user)
                         }
-                        disabled={isLoading}
+                        disabled={paymentLoading}
                       >
-                        {isLoading ? "Processing..." : "Enroll Now"}
+                        {paymentLoading ? "Processing..." : "Enroll Now"}
                       </Button>
                     )}
                   </>

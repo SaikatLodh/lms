@@ -19,18 +19,31 @@ import {
 } from "@/components/ui/table";
 import { useInstroctorCourses } from "@/hooks/react-query/react-hooks/instructor/instroctorHook";
 import AvatarGroupMaxAvatarDemo from "./GroupAvtar";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 const ITEMS_PER_PAGE = 10;
 
 const Courses = () => {
   const { data: products } = useInstroctorCourses();
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
 
-  const totalItems = products?.length || 0;
+  const filteredProducts =
+    products &&
+    products.filter(
+      (product) =>
+        product._id.toLowerCase().includes(search.toLowerCase()) ||
+        product.title.toLowerCase().includes(search.toLowerCase()) ||
+        product.category.toLowerCase().includes(search.toLowerCase()) ||
+        product.description.toLowerCase().includes(search.toLowerCase())
+    );
+
+  const totalItems = filteredProducts?.length || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentItems = products?.slice(startIndex, endIndex) || [];
+  const currentItems = filteredProducts?.slice(startIndex, endIndex) || [];
 
   const getPageNumbers = () => {
     const pageNumbers = [];
@@ -56,6 +69,22 @@ const Courses = () => {
           <h2 className="md:text-5xl text-2xl font-bold md:mt-0 mt-5 md:text-left text-center">
             All Courses
           </h2>
+
+          <div className="my-8">
+            <div className="relative md:w-1/5 w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search courses by ID, title, category or description..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="pl-10"
+              />
+            </div>
+          </div>
+
           <div className="w-full border rounded-md overflow-hidden mt-5">
             <Table>
               <TableHeader>
@@ -83,70 +112,82 @@ const Courses = () => {
                     </TableCell>
                   </TableRow>
                 ))}
+                {totalItems === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="p-6 text-center text-sm text-muted-foreground"
+                    >
+                      No courses found
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
 
-          <div className="mt-4 flex flex-col items-center gap-2">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage > 1) setCurrentPage(currentPage - 1);
-                    }}
-                    className={
-                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-
-                {getPageNumbers().map((pageNum) => (
-                  <PaginationItem key={pageNum}>
-                    <PaginationLink
+          {totalItems > 0 && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        setCurrentPage(pageNum);
+                        if (currentPage > 1) setCurrentPage(currentPage - 1);
                       }}
-                      isActive={currentPage === pageNum}
-                    >
-                      {pageNum}
-                    </PaginationLink>
+                      className={
+                        currentPage === 1 ? "pointer-events-none opacity-50" : ""
+                      }
+                    />
                   </PaginationItem>
-                ))}
 
-                {totalPages > 5 && currentPage < totalPages - 2 && (
+                  {getPageNumbers().map((pageNum) => (
+                    <PaginationItem key={pageNum}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(pageNum);
+                        }}
+                        isActive={currentPage === pageNum}
+                      >
+                        {pageNum}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+
+                  {totalPages > 5 && currentPage < totalPages - 2 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+
                   <PaginationItem>
-                    <PaginationEllipsis />
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage < totalPages)
+                          setCurrentPage(currentPage + 1);
+                      }}
+                      className={
+                        currentPage === totalPages
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
+                    />
                   </PaginationItem>
-                )}
+                </PaginationContent>
+              </Pagination>
 
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage < totalPages)
-                        setCurrentPage(currentPage + 1);
-                    }}
-                    className={
-                      currentPage === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-
-            <div className="text-sm text-muted-foreground">
-              Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of{" "}
-              {totalItems} entries
+              <div className="text-sm text-muted-foreground">
+                Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of{" "}
+                {totalItems} entries
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

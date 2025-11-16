@@ -19,19 +19,33 @@ import {
 } from "@/components/ui/table";
 import { useInstroctorOrders } from "@/hooks/react-query/react-hooks/instructor/instroctorHook";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 const ITEMS_PER_PAGE = 10;
 
 const Orders = () => {
   const { data: orders } = useInstroctorOrders();
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const filteredOrders =
+    orders &&
+    orders.filter(
+      (order) =>
+        order._id.toLowerCase().includes(search.toLowerCase()) ||
+        order.totalAmount.toString().includes(search) ||
+        order.orderStatus.toLowerCase().includes(search.toLowerCase()) ||
+        order.users.fullName.toLowerCase().includes(search.toLowerCase()) ||
+        order.courses.title.toLowerCase().includes(search.toLowerCase())
+    );
 
   // Calculate pagination values
-  const totalItems = orders?.length || 0;
+  const totalItems = filteredOrders?.length || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentItems = orders?.slice(startIndex, endIndex) || [];
+  const currentItems = filteredOrders?.slice(startIndex, endIndex) || [];
 
   // Generate page numbers with dynamic range
   const getPageNumbers = () => {
@@ -54,7 +68,25 @@ const Orders = () => {
     <>
       <div className="w-full h-screen flex justify-center items-center rounded-tl-2xl border border-neutral-200 bg-white p-2 md:p-10 dark:border-neutral-700 dark:bg-neutral-900">
         <div className=" md:w-[80%] w-full m-auto">
-          <h2 className="text-3xl font-bold text-center">All Orders</h2>
+          <h2 className="md:text-5xl text-2xl font-bold md:mt-0 mt-5 md:text-left text-center">
+            All Orders
+          </h2>
+
+          <div className="my-8">
+            <div className="relative md:w-1/5 w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search orders by ID, amount, status, user or course..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="pl-10"
+              />
+            </div>
+          </div>
+
           <div className="w-full border rounded-md overflow-hidden mt-5">
             <Table className="w-full">
               <TableHeader className="w-full">
@@ -73,7 +105,21 @@ const Orders = () => {
                     <TableCell className="font-medium">
                       {order.totalAmount}
                     </TableCell>
-                    <TableCell>{order.orderStatus}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          order.orderStatus.toLowerCase() === "paid"
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                            : order.orderStatus.toLowerCase() === "pending"
+                            ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                            : order.orderStatus.toLowerCase() === "failed"
+                            ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                            : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+                        }`}
+                      >
+                        {order.orderStatus}
+                      </span>
+                    </TableCell>
 
                     <TableCell>
                       <div className="flex gap-2 items-center">
@@ -113,70 +159,84 @@ const Orders = () => {
                     </TableCell>
                   </TableRow>
                 ))}
+                {totalItems === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="p-6 text-center text-sm text-muted-foreground"
+                    >
+                      No orders found
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>
 
-          <div className="mt-4 flex flex-col items-center gap-2">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage > 1) setCurrentPage(currentPage - 1);
-                    }}
-                    className={
-                      currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-
-                {getPageNumbers().map((pageNum) => (
-                  <PaginationItem key={pageNum}>
-                    <PaginationLink
+          {totalItems > 0 && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
                       href="#"
                       onClick={(e) => {
                         e.preventDefault();
-                        setCurrentPage(pageNum);
+                        if (currentPage > 1) setCurrentPage(currentPage - 1);
                       }}
-                      isActive={currentPage === pageNum}
-                    >
-                      {pageNum}
-                    </PaginationLink>
+                      className={
+                        currentPage === 1
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
+                    />
                   </PaginationItem>
-                ))}
 
-                {totalPages > 5 && currentPage < totalPages - 2 && (
+                  {getPageNumbers().map((pageNum) => (
+                    <PaginationItem key={pageNum}>
+                      <PaginationLink
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setCurrentPage(pageNum);
+                        }}
+                        isActive={currentPage === pageNum}
+                      >
+                        {pageNum}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+
+                  {totalPages > 5 && currentPage < totalPages - 2 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+
                   <PaginationItem>
-                    <PaginationEllipsis />
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (currentPage < totalPages)
+                          setCurrentPage(currentPage + 1);
+                      }}
+                      className={
+                        currentPage === totalPages
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
+                    />
                   </PaginationItem>
-                )}
+                </PaginationContent>
+              </Pagination>
 
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage < totalPages)
-                        setCurrentPage(currentPage + 1);
-                    }}
-                    className={
-                      currentPage === totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-
-            <div className="text-sm text-muted-foreground">
-              Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of{" "}
-              {totalItems} entries
+              <div className="text-sm text-muted-foreground">
+                Showing {startIndex + 1} to {Math.min(endIndex, totalItems)} of{" "}
+                {totalItems} entries
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>
