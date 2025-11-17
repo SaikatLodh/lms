@@ -42,6 +42,9 @@ const ScheduleMettings = ({
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      date: moment().toDate(),
+    },
   });
 
   const onSubmit = (data: FormData) => {
@@ -91,6 +94,7 @@ const ScheduleMettings = ({
                         mode="single"
                         selected={field.value}
                         captionLayout="dropdown"
+                        disabled={(date) => moment(date).isBefore(moment(), 'day')}
                         onSelect={(date) => {
                           field.onChange(date);
                           setOpen(false);

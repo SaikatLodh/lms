@@ -109,7 +109,7 @@ const Meeting = () => {
           location === "/user/profile" ? "h-[400px]" : "h-screen"
         } rounded-tl-2xl border border-neutral-200 bg-white p-2 md:p-10 dark:border-neutral-700 dark:bg-neutral-900 overflow-y-auto instroctor-course`}
       >
-        <div className=" md:w-[80%] w-full m-auto">
+        <div className=" md:w-[90%] w-full m-auto">
           <div>
             <h2 className="text-2xl md:text-5xl font-bold mb-4 md:mt-0 mt-5 md:text-left text-center">
               Meetings

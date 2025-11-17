@@ -90,7 +90,6 @@ const Zgocloud = () => {
       // Check if meeting date is in the past
       if (meetingDateOnly < currentDate) {
         console.log("Meeting date is in the past, redirecting to profile");
-        mutate();
         router.push(`/user/profile`);
         return;
       }
@@ -199,7 +198,7 @@ const Zgocloud = () => {
   return (
     <>
       <div ref={containerRef} className="w-full h-screen relative">
-        <div className="absolute top-5 left-10 text-[#557BFF] text-[50px] z-[7000]">
+        <div className="absolute top-5 left-10 text-[#55ff88] text-[50px] z-[9000]">
           {formatTime(timeLeft)}
         </div>
         {dateComparison && (

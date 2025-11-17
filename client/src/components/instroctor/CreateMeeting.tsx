@@ -46,6 +46,9 @@ const CreateMeeting = ({
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      duration: "15m",
+    },
   });
   const { mutate, isPending } = useCreateMeeting();
 
